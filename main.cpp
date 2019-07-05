@@ -21,10 +21,10 @@ node* revLL(node *head){
 
 void printLL(node *temp){
     while(temp){
-        cout<<temp->val<<" ";
+        cout<<temp->val<<" -> ";
         temp = temp->next;
     }
-    cout << endl;
+    cout <<"NULL"<<endl;
 }
 
 node* remOdd(node *head){
@@ -48,7 +48,7 @@ node* remOdd(node *head){
     return head;
 }
 
-node *insertIntoLL(int arr[], int len){
+node *insertIntoLLAtTail(int arr[], int len){
     node *head = NULL;
     node *tail = NULL;
     for (int i = 0; i < len; i++){
@@ -67,6 +67,14 @@ node *insertIntoLL(int arr[], int len){
     return head;
 }
 
+node *findMiddle(node *head){
+    node *half = head, *full = head;
+    while(full){
+        (full->next) ? ((full->next->next) ? ({full = full->next->next; half = half->next;}) : ({full = full->next->next;})) : ({full=full->next;});
+    }
+    return half;
+}
+
 node *remDup(node *head){
     
     unordered_map<int, bool> myMap;
@@ -82,6 +90,22 @@ node *remDup(node *head){
             myMap.insert(make_pair(temp->val, true));
             prev = temp;
         }
+        temp = temp->next;
+    }
+    return head;
+}
+
+node *remDupSorted(node *head){
+    node *prev = head;
+    node *temp = head->next;
+    int curEl = prev->val;
+    while(temp){
+        if(temp->val == curEl){
+            prev->next = temp->next;
+        }else{
+            prev = temp;
+            curEl = prev->val;
+        }        
         temp = temp->next;
     }
     return head;
@@ -149,33 +173,189 @@ node *sortLL(node *head){
     return newHead;
 }
 
+bool hasEl(node *head, int el){
+    node *temp = head;
+    while(temp){
+        if(temp->val == el)
+            return true;
+    }
+    return false;
+}
+
+node *addOne(node *head){
+    node *newHead = revLL(head);
+    node *temp = newHead;
+    while(temp){
+        if(temp->val<9){
+            temp->val += 1;
+            break; 
+        }else{
+            temp->val = 0;
+            if(!(temp->next)){
+                node *el = (node *) malloc(sizeof(node));
+                el->val = 1;
+                el->next = NULL;
+                temp->next = el;
+                break;
+            }
+            temp = temp->next;
+        }
+    }
+
+    return revLL(newHead);
+}
+
+node *insertIntoLLAtHead(node *head, int num){
+    node *temp = (node *)malloc(sizeof(node));
+    temp->val = num;
+    temp->next = head;
+    head = temp;
+    return head;
+}
+
+node *numToLL(int num){
+    node *head = NULL;
+    if(num==0){
+        return insertIntoLLAtHead(head, 0);
+    }
+    while(num){
+        head = insertIntoLLAtHead(head, num%10);
+        num /= 10;
+    }
+    return head;
+}
+
+node *revForEveryGroup(node *head, int grp){
+    if(grp==1)
+        return head;
+    else if(lenLL(head) == grp)
+        return revLL(head);
+    else {
+
+    }
+}
+
+bool ifLoop(node *head){
+    node *half = head;
+    node *full = head->next;
+    while(full && full->next){
+        if(half==full)
+            return true;          
+        full = full->next->next;
+        half = half->next;
+    }
+    return false;
+}
+
+node *remLoop(node *head){
+    node *half = head;
+    node *prev = head;
+    node *full = head->next;
+    while(full && full->next){
+        if(half==full){
+            prev->next = NULL;
+            return head;
+        }
+        prev = full->next;
+        full = full->next->next;
+        half = half->next;
+    }
+    return head;
+}
+
+node *nthFromFront(node *head, int n){
+    node *temp = head;
+    int i=1;
+    while(i<n){
+        temp = temp->next;
+        i++;
+    }
+    return temp;
+}
+
+node *nthFromEnd(node *head, int n){
+    return nthFromFront(head, lenLL(head)-n+1);
+}
+
+bool ifPalindrome(node *head){
+    node *rev = revLL(head);
+    node *temp = head;
+    while(temp){
+        if(temp->val != rev->val)
+            return false;
+        
+        rev = rev->next;
+        temp = temp->next;
+    }
+    return true;
+}
+
+node *deleteLastOcc(node *head, int el){
+    cout<<"hello22";
+    node *temp = head;
+    node *cur = NULL, *prev = head, *nex = head->next, *elPrev = head, *elNext = head->next;
+    while(temp){
+        cout<<"hello";
+        if(temp->val == el){
+            cur = temp;
+            elPrev = prev;
+            elNext = nex;
+        }
+        temp = temp->next;
+        prev = prev->next;
+        nex = nex->next;
+    }
+    elPrev->next = elNext;
+
+    return head;
+}
+
 
 int main() {
 
-    int arr[] = {1,3,2,3,4,5,5,5,7,8,8,8,66,6,7,6};
+    int arr[] = {1,3,5,9,9};
 
-    node *head = insertIntoLL(arr, sizeof(arr)/sizeof(arr[0]));
+    node *head = insertIntoLLAtTail(arr, sizeof(arr)/sizeof(arr[0]));
     
     cout<<"Original List is: ";
     printLL(head);
 
-    cout<<"Length of list is: "<<lenLL(head)<<endl;
+    cout<<"Length of list is: "<<lenLL(head)<<"hdu"<<endl;
 
-    cout<<"Reversed list is: ";
-    head = revLL(head);
-    printLL(head);    
 
-    cout<<"Even numbers in the list are: ";
-    head = remOdd(head);
+    // cout<<"Reversed list is: ";
+    // head = revLL(head);
+    // printLL(head);    
+
+    // cout<<"Even numbers in the list are: ";
+    // head = remOdd(head);
+    // printLL(head);
+
+    // cout<<"List after removing duplicates: ";
+    // head = remDup(head);
+    // printLL(head);
+
+    // cout<<"Sorted List is: ";
+    // head = sortLL(head);
+    // printLL(head);
+
+    // node *midd = findMiddle(head);
+    // cout<<midd->val<<endl;
+
+    cout<<"List after removing duplicates: "<<endl;
+    head = deleteLastOcc(head, 5);
+    cout<<"hello"<<endl;
     printLL(head);
 
-    cout<<"List after removing duplicates: ";
-    head = remDup(head);
-    printLL(head);
+    // int n;
+    // cin >> n;
+    // head = numToLL(n);
+    // cout<<"List of number is: ";
+    // printLL(head);
 
-    cout<<"Sorted List is: ";
-    head = sortLL(head);
-    printLL(head);
+    // cout<<"List after adding one: ";
+    // head = addOne(head);
+    // printLL(head);
 
     return 0;
 }
