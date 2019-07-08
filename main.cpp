@@ -291,21 +291,31 @@ bool ifPalindrome(node *head){
 }
 
 node *deleteLastOcc(node *head, int el){
-    cout<<"hello22";
-    node *temp = head;
-    node *cur = NULL, *prev = head, *nex = head->next, *elPrev = head, *elNext = head->next;
+    node *temp = head, *prev = NULL, *nex = head->next;
+    node *cur = NULL, *elPrev = NULL, *elNext = NULL;
     while(temp){
-        cout<<"hello";
         if(temp->val == el){
             cur = temp;
             elPrev = prev;
             elNext = nex;
         }
         temp = temp->next;
-        prev = prev->next;
-        nex = nex->next;
+
+        if(!prev){
+            prev = head;
+        }else{
+            prev = prev->next;
+        }
+
+        if(nex){
+            nex = nex->next;
+        }
     }
-    elPrev->next = elNext;
+    if(!elPrev){
+        head = head->next;
+    }else{
+        elPrev->next = elNext;
+    }
 
     return head;
 }
@@ -313,14 +323,14 @@ node *deleteLastOcc(node *head, int el){
 
 int main() {
 
-    int arr[] = {1,3,5,9,9};
+    int arr[] = {1,3,4,5,9,9,11};
 
     node *head = insertIntoLLAtTail(arr, sizeof(arr)/sizeof(arr[0]));
     
     cout<<"Original List is: ";
     printLL(head);
 
-    cout<<"Length of list is: "<<lenLL(head)<<"hdu"<<endl;
+    cout<<"Length of list is: "<<lenLL(head)<<endl;
 
 
     // cout<<"Reversed list is: ";
@@ -342,11 +352,6 @@ int main() {
     // node *midd = findMiddle(head);
     // cout<<midd->val<<endl;
 
-    cout<<"List after removing duplicates: "<<endl;
-    head = deleteLastOcc(head, 5);
-    cout<<"hello"<<endl;
-    printLL(head);
-
     // int n;
     // cin >> n;
     // head = numToLL(n);
@@ -355,6 +360,10 @@ int main() {
 
     // cout<<"List after adding one: ";
     // head = addOne(head);
+    // printLL(head);
+
+    // cout<<"List after removing duplicates: ";
+    // head = deleteLastOcc(head, 1);
     // printLL(head);
 
     return 0;
