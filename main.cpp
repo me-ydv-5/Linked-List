@@ -13,6 +13,8 @@ struct heavyNode{
     heavyNode *down;
 };
 
+node *reverseLL(node *head);
+
 node *insertIntoLLAtHead(node *head, int num){
     node *temp = (node *)malloc(sizeof(node));
     temp->val = num;
@@ -21,7 +23,21 @@ node *insertIntoLLAtHead(node *head, int num){
     return head;
 }
 
-node *insertIntoLLAtTail(vector<int> arr){
+node *insertIntoLLAtTail(node *head, int num){
+    node *box = (node *)malloc(sizeof(node));
+    box->val = num;
+    box->next = NULL;
+    if(!head){
+        return box;
+    }
+    node *temp = head;
+    while(temp->next)
+        temp = temp->next;
+    temp->next = box;
+    return head;
+}
+
+node *vectorToLL(vector<int> arr){
     node *head = NULL;
     node *tail = NULL;
     for (int i = 0; i < arr.size(); i++){
@@ -195,7 +211,9 @@ void printHeavyList(heavyNode *head){
 }
 
 node *flattenLists(heavyNode *head){
+    node *headNew = NULL;
     vector<int> arr;
+    // headNew = insertIntoLLAtTail(headNew, head->val);
     arr.push_back(head->val);
     heavyNode *tempT = head->right;
     heavyNode *tempD1 = head->down;
@@ -203,12 +221,14 @@ node *flattenLists(heavyNode *head){
     while(1){
         if(!tempD1 && tempD2){
             while(tempD2){
+                // headNew = insertIntoLLAtTail(headNew, tempD2->val);
                 arr.push_back(tempD2->val);
                 tempD2 = tempD2->down;
             }
             break;
         }else if(tempD1 && !tempD2){
             while(tempD1){
+                // headNew = insertIntoLLAtTail(headNew, tempD1->val);
                 arr.push_back(tempD1->val);
                 tempD1 = tempD1->down;
             }
@@ -217,6 +237,7 @@ node *flattenLists(heavyNode *head){
             break;
         }else{
             if(tempD1->val <= tempD2->val){
+                // headNew = insertIntoLLAtTail(headNew, tempD1->val);
                 arr.push_back(tempD1->val);
                 if(tempD1->down){
                     tempD1 = tempD1->down;
@@ -225,6 +246,7 @@ node *flattenLists(heavyNode *head){
                     tempT = tempD1;
                 }
             }else{
+                // headNew = insertIntoLLAtTail(headNew, tempD2->val);
                 arr.push_back(tempD2->val);
                 if(tempD2->down){
                     tempD2 = tempD2->down;
@@ -235,7 +257,8 @@ node *flattenLists(heavyNode *head){
             }
         }       
     }
-    return insertIntoLLAtTail(arr);
+    // return headNew;
+    return vectorToLL(arr);
 }
 
 
@@ -548,28 +571,28 @@ node *reverseLL(node *head){
 
 int main() {
 
-    vector<int> vec1 = {1,2,33,44,5,6,5};
+    vector<int> vec1 = {1,2,3,4,5,6,9};
 
-    // vector<int> vec2 = {6,7,8,9,10,11,12,13,22,24,25,33};
-    // vector<int> vec3 = {11,12,13,14,15,16,17,18};
+    vector<int> vec2 = {6,7,8,9,10,11,12,13,22,24,25,33};
+    vector<int> vec3 = {11,12,13,14,15,16,17,18};
 
-    node *head = insertIntoLLAtTail(vec1);  
-    cout<<"Original List is: ";
-    printLL(head);
-    cout<<"Length of list is: "<<lenLL(head)<<endl;
+    // node *head = vectorToLL(vec1);  
+    // cout<<"Original List is: ";
+    // printLL(head);
+    // cout<<"Length of list is: "<<lenLL(head)<<endl;
 
     // cout<<"Reversed list is: ";
     // head = reverseLL(head);
     // printLL(head);
 
-    // heavyNode *head = NULL;
-    // head = insertIntoHeavyNode(head, vec);
-    // head = insertIntoHeavyNode(head, vec2);
-    // head = insertIntoHeavyNode(head, vec3);
-    // printHeavyList(head);
-    // cout<<"List after flattening list is: ";
-    // node *flattened = flattenLists(head);
-    // printLL(flattened);   
+    heavyNode *head = NULL;
+    head = insertIntoHeavyNode(head, vec1);
+    head = insertIntoHeavyNode(head, vec2);
+    head = insertIntoHeavyNode(head, vec3);
+    printHeavyList(head);
+    cout<<"List after flattening list is: ";
+    node *flattened = flattenLists(head);
+    printLL(flattened);   
 
     // cout<<"List after removing duplicates: ";
     // head = remDup(head);
