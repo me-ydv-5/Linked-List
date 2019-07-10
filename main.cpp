@@ -7,18 +7,6 @@ struct node{
     node *next;
 };
 
-node* revLL(node *head){
-    node *tempHead = NULL;
-    while(head){
-        node *temp = (node *)malloc(sizeof(node));
-        temp->val = head->val;
-        temp->next = tempHead;
-        tempHead = temp;
-        head = head->next;
-    }
-    return tempHead;
-}
-
 void printLL(node *temp){
     while(temp){
         cout<<temp->val<<" -> ";
@@ -64,50 +52,6 @@ node *insertIntoLLAtTail(int arr[], int len){
         tail = temp;
     }
 
-    return head;
-}
-
-node *findMiddle(node *head){
-    node *half = head, *full = head;
-    while(full){
-        (full->next) ? ((full->next->next) ? ({full = full->next->next; half = half->next;}) : ({full = full->next->next;})) : ({full=full->next;});
-    }
-    return half;
-}
-
-node *remDup(node *head){
-    
-    unordered_map<int, bool> myMap;
-    myMap.insert(make_pair(head->val, true));
-    
-    node *prev = head;
-    node *temp = head->next;
-
-    while(temp){
-        if(myMap.find(temp->val) != myMap.end()){
-            prev->next = temp->next;
-        }else{
-            myMap.insert(make_pair(temp->val, true));
-            prev = temp;
-        }
-        temp = temp->next;
-    }
-    return head;
-}
-
-node *remDupSorted(node *head){
-    node *prev = head;
-    node *temp = head->next;
-    int curEl = prev->val;
-    while(temp){
-        if(temp->val == curEl){
-            prev->next = temp->next;
-        }else{
-            prev = temp;
-            curEl = prev->val;
-        }        
-        temp = temp->next;
-    }
     return head;
 }
 
@@ -182,6 +126,88 @@ bool hasEl(node *head, int el){
     return false;
 }
 
+node *insertIntoLLAtHead(node *head, int num){
+    node *temp = (node *)malloc(sizeof(node));
+    temp->val = num;
+    temp->next = head;
+    head = temp;
+    return head;
+}
+
+node *numToLL(int num){
+    node *head = NULL;
+    if(num==0){
+        return insertIntoLLAtHead(head, 0);
+    }
+    while(num){
+        head = insertIntoLLAtHead(head, num%10);
+        num /= 10;
+    }
+    return head;
+}
+
+node* revLL(node *head){
+    node *tempHead = NULL;
+    while(head){
+        node *temp = (node *)malloc(sizeof(node));
+        temp->val = head->val;
+        temp->next = tempHead;
+        tempHead = temp;
+        head = head->next;
+    }
+    return tempHead;
+}
+
+/* Problem 4. */
+
+node *findMiddle(node *head){
+    node *half = head, *full = head;
+    while(full){
+        (full->next) ? ((full->next->next) ? ({full = full->next->next; half = half->next;}) : ({full = full->next->next;})) : ({full=full->next;});
+    }
+    return half;
+}
+
+/* Problem 5. */
+
+node *remDup(node *head){
+    
+    unordered_map<int, bool> myMap;
+    myMap.insert(make_pair(head->val, true));
+    
+    node *prev = head;
+    node *temp = head->next;
+
+    while(temp){
+        if(myMap.find(temp->val) != myMap.end()){
+            prev->next = temp->next;
+        }else{
+            myMap.insert(make_pair(temp->val, true));
+            prev = temp;
+        }
+        temp = temp->next;
+    }
+    return head;
+}
+
+node *remDupSorted(node *head){
+    node *prev = head;
+    node *temp = head->next;
+    int curEl = prev->val;
+    while(temp){
+        if(temp->val == curEl){
+            prev->next = temp->next;
+        }else{
+            prev = temp;
+            curEl = prev->val;
+        }        
+        temp = temp->next;
+    }
+    return head;
+}
+
+/* Problem 6. */
+
 node *addOne(node *head){
     node *newHead = revLL(head);
     node *temp = newHead;
@@ -205,25 +231,7 @@ node *addOne(node *head){
     return revLL(newHead);
 }
 
-node *insertIntoLLAtHead(node *head, int num){
-    node *temp = (node *)malloc(sizeof(node));
-    temp->val = num;
-    temp->next = head;
-    head = temp;
-    return head;
-}
-
-node *numToLL(int num){
-    node *head = NULL;
-    if(num==0){
-        return insertIntoLLAtHead(head, 0);
-    }
-    while(num){
-        head = insertIntoLLAtHead(head, num%10);
-        num /= 10;
-    }
-    return head;
-}
+/* Problem 7. */
 
 node *revForEveryGroup(node *head, int grp){
     if(grp==1)
@@ -234,6 +242,8 @@ node *revForEveryGroup(node *head, int grp){
 
     }
 }
+
+/* Problem 8. */
 
 bool ifLoop(node *head){
     node *half = head;
@@ -246,6 +256,8 @@ bool ifLoop(node *head){
     }
     return false;
 }
+
+/* Problem 9. */
 
 node *remLoop(node *head){
     node *half = head;
@@ -263,6 +275,8 @@ node *remLoop(node *head){
     return head;
 }
 
+/* Problem 10. */
+
 node *nthFromFront(node *head, int n){
     node *temp = head;
     int i=1;
@@ -277,6 +291,8 @@ node *nthFromEnd(node *head, int n){
     return nthFromFront(head, lenLL(head)-n+1);
 }
 
+/* Problem 11. */
+
 bool ifPalindrome(node *head){
     node *rev = revLL(head);
     node *temp = head;
@@ -289,6 +305,8 @@ bool ifPalindrome(node *head){
     }
     return true;
 }
+
+/* Problem 13. */
 
 node *deleteLastOcc(node *head, int el){
     node *temp = head, *prev = NULL, *nex = head->next;
@@ -320,22 +338,110 @@ node *deleteLastOcc(node *head, int el){
     return head;
 }
 
+/* Problem 14. */
+
+node *rotateByK(node *head, int k){
+    node *temp=head, *newHead=NULL, *prev=NULL;
+    int i=1;
+    while(temp->next){
+        if(i==k+1){
+            newHead = temp;
+        }
+        if(i==k){
+            prev = temp;
+        }
+        temp = temp->next;
+        i++;
+    }
+    temp->next = head;
+    prev->next = NULL;
+    head = temp;
+
+    return newHead;
+}
+
+/* Problem 15. */
+
+node *deletedMNnodes(node *head, int m, int n){
+    node *temp = head;
+    int i=1;
+    while(temp){
+        if(i==m){
+            node *temp2 = temp->next;
+            int j=1;
+            bool end = true;
+            while(temp2){
+                if(j==n+1){
+                    temp->next = temp2;
+                    end = false;
+                    break;
+                }
+                temp2 = temp2->next;
+                j++;
+            }
+            if(end){
+                temp->next = NULL;
+            }
+            i=0;
+        }
+        temp = temp->next;
+        i++;
+    }
+    return head;
+}
+
+/* Problem 16. */
+
+pair<node*, node*> mergeTwoLL(node *head1, node *head2){
+    node *temp1 = head1;
+    node *temp2 = head2;
+    while(temp1 && temp2){
+        node *newTemp2 = temp2->next;
+        temp2->next = temp1->next;
+        temp1->next = temp2;
+        temp2 = newTemp2;
+        temp1 = temp1->next->next;
+    }
+    return make_pair(head1, temp2);
+}
+
+/* Problem 17. */
+
+void deleteLL(node *head){
+    node *temp = head;
+    node *prev = NULL;
+    while(temp){
+        prev = temp;
+        temp = temp->next;
+        free(prev);
+    }
+    head = NULL;
+    cout<<"List Deleted."<<endl;
+}
+
+/* Problem 18. */
+
+
 
 int main() {
 
-    int arr[] = {1,3,4,5,9,9,11};
+    int arr[] = {1,3,5,11};
+    // int arr2[] = {2,4,6,8,9,10};
 
     node *head = insertIntoLLAtTail(arr, sizeof(arr)/sizeof(arr[0]));
+    // node *head2 = insertIntoLLAtTail(arr2, sizeof(arr2)/sizeof(arr2[0]));
     
     cout<<"Original List is: ";
     printLL(head);
 
-    cout<<"Length of list is: "<<lenLL(head)<<endl;
+    // cout<<"Original List2 is: ";
+    // printLL(head2);
 
+    // cout<<"Length of list is: "<<lenLL(head)<<endl;
 
-    // cout<<"Reversed list is: ";
-    // head = revLL(head);
-    // printLL(head);    
+    cout<<"Reversed list is: ";
+    head = revLL(head);
+    printLL(head);    
 
     // cout<<"Even numbers in the list are: ";
     // head = remOdd(head);
@@ -365,6 +471,25 @@ int main() {
     // cout<<"List after removing duplicates: ";
     // head = deleteLastOcc(head, 1);
     // printLL(head);
+
+    // cout<<"List after rotating by K: ";
+    // head = rotateByK(head, 4);
+    // printLL(head);
+
+    // cout<<"List after deleting MN nodes: ";
+    // head = deletedMNnodes(head, 2, 4);
+    // printLL(head);
+
+    // pair<node*, node*> result = mergeTwoLL(head1, head2);
+    // cout<<"List after merging 2 Lists: "<<endl;
+    // cout<<"List 1: ";
+    // printLL(result.first);
+    // cout<<"List 2: ";
+    // printLL(result.second);
+
+    // deleteLL(head);
+
+
 
     return 0;
 }
