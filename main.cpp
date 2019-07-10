@@ -131,18 +131,6 @@ node *numToLL(int num){
     return head;
 }
 
-node* revLL(node *head){
-    node *tempHead = NULL;
-    while(head){
-        node *temp = (node *)malloc(sizeof(node));
-        temp->val = head->val;
-        temp->next = tempHead;
-        tempHead = temp;
-        head = head->next;
-    }
-    return tempHead;
-}
-
 
 
 /* Problem 1. */
@@ -316,7 +304,7 @@ node *remDupSorted(node *head){
 /* Problem 6. */
 
 node *addOne(node *head){
-    node *newHead = revLL(head);
+    node *newHead = reverseLL(head);
     node *temp = newHead;
     while(temp){
         if(temp->val<9){
@@ -335,7 +323,7 @@ node *addOne(node *head){
         }
     }
 
-    return revLL(newHead);
+    return reverseLL(newHead);
 }
 
 /* Problem 7. */
@@ -344,7 +332,7 @@ node *revForEveryGroup(node *head, int grp){
     if(grp==1)
         return head;
     else if(lenLL(head) == grp)
-        return revLL(head);
+        return reverseLL(head);
     else {
 
     }
@@ -401,7 +389,7 @@ node *nthFromEnd(node *head, int n){
 /* Problem 11. */
 
 bool ifPalindrome(node *head){
-    node *rev = revLL(head);
+    node *rev = reverseLL(head);
     node *temp = head;
     while(temp){
         if(temp->val != rev->val)
@@ -532,13 +520,35 @@ void deleteLL(node *head){
 
 /* Problem 18. */
 
-// Still to Update
+node *reverseLL(node *head){
+    if(!(head->next)){
+        return head;
+    }else if(!(head->next->next)){
+        node *prev = head, *cur = head->next;
+        prev->next = NULL;
+        cur->next = prev;
+        head = cur;
+        return head;
+    }
+
+    node *prev = head, *cur = head->next, *nex = head->next->next;
+    prev->next = NULL;
+    cur->next = prev;
+    head = cur;
+    while(nex){
+        cur = nex;
+        nex = nex->next;
+        cur->next = head;
+        head = cur;
+    }
+    return head;
+}
 
 
 
 int main() {
 
-    vector<int> vec1 = {1,2,3,4,5,17,45,56,67,88};
+    vector<int> vec1 = {1,2,33,44,5,6,5};
 
     // vector<int> vec2 = {6,7,8,9,10,11,12,13,22,24,25,33};
     // vector<int> vec3 = {11,12,13,14,15,16,17,18};
@@ -548,6 +558,9 @@ int main() {
     printLL(head);
     cout<<"Length of list is: "<<lenLL(head)<<endl;
 
+    // cout<<"Reversed list is: ";
+    // head = reverseLL(head);
+    // printLL(head);
 
     // heavyNode *head = NULL;
     // head = insertIntoHeavyNode(head, vec);
@@ -556,11 +569,7 @@ int main() {
     // printHeavyList(head);
     // cout<<"List after flattening list is: ";
     // node *flattened = flattenLists(head);
-    // printLL(flattened);
-
-    // cout<<"Reversed list is: ";
-    // head = revLL(head);
-    // printLL(head);    
+    // printLL(flattened);   
 
     // cout<<"List after removing duplicates: ";
     // head = remDup(head);
@@ -610,6 +619,6 @@ int main() {
     // cout<<"List after deleting middle node: ";
     // head = deleteMiddle(head);
     // printLL(head);
-    
+
     return 0;
 }
