@@ -7,41 +7,26 @@ struct node{
     node *next;
 };
 
-void printLL(node *temp){
-    while(temp){
-        cout<<temp->val<<" -> ";
-        temp = temp->next;
-    }
-    cout <<"NULL"<<endl;
-}
+struct heavyNode{
+    int val;
+    heavyNode *right;
+    heavyNode *down;
+};
 
-node* remOdd(node *head){
-    node *temp = head;
-    node *lastEven = NULL;
-    bool flag = false;
-    while(temp){
-        if(!(temp->val%2)){
-            lastEven = temp;
-            if(!flag){
-                head = temp;
-                flag = true;
-            }
-        }else{
-            if(lastEven){
-                lastEven->next = temp->next;
-            }
-        }
-        temp = temp->next;
-    }
+node *insertIntoLLAtHead(node *head, int num){
+    node *temp = (node *)malloc(sizeof(node));
+    temp->val = num;
+    temp->next = head;
+    head = temp;
     return head;
 }
 
-node *insertIntoLLAtTail(int arr[], int len){
+node *insertIntoLLAtTail(vector<int> arr){
     node *head = NULL;
     node *tail = NULL;
-    for (int i = 0; i < len; i++){
+    for (int i = 0; i < arr.size(); i++){
         node *temp = (node *)malloc(sizeof(node));
-        temp->val = arr[i];
+        temp->val = arr.at(i);
         temp->next = NULL;
         if(!head){
             head = temp;
@@ -53,6 +38,14 @@ node *insertIntoLLAtTail(int arr[], int len){
     }
 
     return head;
+}
+
+void printLL(node *temp){
+    while(temp){
+        cout<<temp->val<<" -> ";
+        temp = temp->next;
+    }
+    cout <<"NULL"<<endl;
 }
 
 int lenLL(node *head){
@@ -126,14 +119,6 @@ bool hasEl(node *head, int el){
     return false;
 }
 
-node *insertIntoLLAtHead(node *head, int num){
-    node *temp = (node *)malloc(sizeof(node));
-    temp->val = num;
-    temp->next = head;
-    head = temp;
-    return head;
-}
-
 node *numToLL(int num){
     node *head = NULL;
     if(num==0){
@@ -158,7 +143,9 @@ node* revLL(node *head){
     return tempHead;
 }
 
-/* Problem 4. */
+
+
+/* Problem 1. */
 
 node *findMiddle(node *head){
     node *half = head, *full = head;
@@ -166,6 +153,126 @@ node *findMiddle(node *head){
         (full->next) ? ((full->next->next) ? ({full = full->next->next; half = half->next;}) : ({full = full->next->next;})) : ({full=full->next;});
     }
     return half;
+}
+
+/* Problem 2. */
+
+heavyNode *insertIntoHeavyNode(heavyNode* head, vector<int> arr){
+
+    heavyNode *list = NULL;
+    for(int i=0; i<arr.size(); i++){
+
+        heavyNode *temp = (heavyNode *)malloc(sizeof(heavyNode));
+        temp->val = arr.at(i);
+        temp->right = NULL;
+        temp->down = NULL;
+
+        if(!list){
+            list = temp;
+        }else{
+            heavyNode *newTemp = list;
+            while(newTemp->down){
+                newTemp = newTemp->down;
+            }
+            newTemp->down = temp;
+        }
+    }
+
+    if(!head){
+        head = list;
+        return head;
+    }
+
+    heavyNode *temp = head;
+    while(temp->right){
+        temp = temp->right;
+    }
+    temp->right = list;
+
+    return head;
+}
+
+void printHeavyList(heavyNode *head){
+    while(head){
+        heavyNode *temp = head;
+        while(temp){
+            cout<<temp->val<<"->";
+            temp = temp->down;
+        }
+        cout<<"NULL"<<endl;
+        cout<<"|"<<endl;
+        head = head->right;
+    }
+    cout<<"NULL"<<endl;
+}
+
+node *flattenLists(heavyNode *head){
+    vector<int> arr;
+    arr.push_back(head->val);
+    heavyNode *tempT = head->right;
+    heavyNode *tempD1 = head->down;
+    heavyNode *tempD2 = tempT;
+    while(1){
+        if(!tempD1 && tempD2){
+            while(tempD2){
+                arr.push_back(tempD2->val);
+                tempD2 = tempD2->down;
+            }
+            break;
+        }else if(tempD1 && !tempD2){
+            while(tempD1){
+                arr.push_back(tempD1->val);
+                tempD1 = tempD1->down;
+            }
+            break;
+        }else if(!tempD1 && !tempD2){
+            break;
+        }else{
+            if(tempD1->val <= tempD2->val){
+                arr.push_back(tempD1->val);
+                if(tempD1->down){
+                    tempD1 = tempD1->down;
+                }else{
+                    tempD1 = tempT->right;
+                    tempT = tempD1;
+                }
+            }else{
+                arr.push_back(tempD2->val);
+                if(tempD2->down){
+                    tempD2 = tempD2->down;
+                }else{
+                    tempD2 = tempT->right;
+                    tempT = tempD2;
+                }
+            }
+        }       
+    }
+    return insertIntoLLAtTail(arr);
+}
+
+
+/* Problem 3. */
+
+// Still to Update
+
+
+/* Problem 4. */
+
+node *deleteMiddle(node *head){
+
+    if(!(head->next)){
+        return NULL;
+    }else if(!(head->next->next)){
+        head = head->next;
+        return head;
+    }
+
+    node *half = head, *full = head, *prev = head;
+    while(full){
+        (full->next) ? ((full->next->next) ? ({full = full->next->next;prev = half; half = half->next;}) : ({full = full->next->next;})) : ({full=full->next;});
+    }
+    prev->next = half->next;
+    return head;
 }
 
 /* Problem 5. */
@@ -306,6 +413,10 @@ bool ifPalindrome(node *head){
     return true;
 }
 
+/* Problem 12. */
+
+// Still to Update
+
 /* Problem 13. */
 
 node *deleteLastOcc(node *head, int el){
@@ -421,31 +532,35 @@ void deleteLL(node *head){
 
 /* Problem 18. */
 
+// Still to Update
+
 
 
 int main() {
 
-    int arr[] = {1,3,5,11};
-    // int arr2[] = {2,4,6,8,9,10};
+    vector<int> vec1 = {1,2,3,4,5,17,45,56,67,88};
 
-    node *head = insertIntoLLAtTail(arr, sizeof(arr)/sizeof(arr[0]));
-    // node *head2 = insertIntoLLAtTail(arr2, sizeof(arr2)/sizeof(arr2[0]));
-    
+    // vector<int> vec2 = {6,7,8,9,10,11,12,13,22,24,25,33};
+    // vector<int> vec3 = {11,12,13,14,15,16,17,18};
+
+    node *head = insertIntoLLAtTail(vec1);  
     cout<<"Original List is: ";
     printLL(head);
+    cout<<"Length of list is: "<<lenLL(head)<<endl;
 
-    // cout<<"Original List2 is: ";
-    // printLL(head2);
 
-    // cout<<"Length of list is: "<<lenLL(head)<<endl;
+    // heavyNode *head = NULL;
+    // head = insertIntoHeavyNode(head, vec);
+    // head = insertIntoHeavyNode(head, vec2);
+    // head = insertIntoHeavyNode(head, vec3);
+    // printHeavyList(head);
+    // cout<<"List after flattening list is: ";
+    // node *flattened = flattenLists(head);
+    // printLL(flattened);
 
-    cout<<"Reversed list is: ";
-    head = revLL(head);
-    printLL(head);    
-
-    // cout<<"Even numbers in the list are: ";
-    // head = remOdd(head);
-    // printLL(head);
+    // cout<<"Reversed list is: ";
+    // head = revLL(head);
+    // printLL(head);    
 
     // cout<<"List after removing duplicates: ";
     // head = remDup(head);
@@ -463,12 +578,11 @@ int main() {
     // head = numToLL(n);
     // cout<<"List of number is: ";
     // printLL(head);
-
     // cout<<"List after adding one: ";
     // head = addOne(head);
     // printLL(head);
 
-    // cout<<"List after removing duplicates: ";
+    // cout<<"List after removing last occurence: ";
     // head = deleteLastOcc(head, 1);
     // printLL(head);
 
@@ -481,15 +595,21 @@ int main() {
     // printLL(head);
 
     // pair<node*, node*> result = mergeTwoLL(head1, head2);
-    // cout<<"List after merging 2 Lists: "<<endl;
+    // cout<<"Lists after merging 2 Lists: "<<endl;
     // cout<<"List 1: ";
     // printLL(result.first);
     // cout<<"List 2: ";
     // printLL(result.second);
 
     // deleteLL(head);
+    
+    // cout<<"List after reversing nodes: ";
+    // head = deletedMNnodes(head);
+    // printLL(head);
 
-
-
+    // cout<<"List after deleting middle node: ";
+    // head = deleteMiddle(head);
+    // printLL(head);
+    
     return 0;
 }
